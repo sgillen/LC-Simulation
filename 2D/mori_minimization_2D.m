@@ -48,7 +48,7 @@ nMatrix(:,1,2) = 0;
 nMatrix(:,1,1) = 1;
     
 nMatrix(:,end,2) = 0;
-nMatrix(:,end,1) = 1;
+nMatrix(:,end,1) = -1;
 
 
 

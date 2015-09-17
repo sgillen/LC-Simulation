@@ -2,25 +2,43 @@
 %merely making some modifications
 
 %% initialize a grid and other parameters
-numsteps = 2000; %steps in time to take
-frames = 20;  %number of time frames to save
-grid = [12 12 8]; %how big is the grid (there is a director at every point)
-timestep = 0.0005; %how long (in seconds) should each timestep be?
-gamma = 0.08; % rotational viscosity of 0.8 Poise
+%how long (in seconds) should each timestep be?
+timestep = 0.0005; 
+%number of time steps to take
+numsteps = 2000; 
+%number of time frames to save
+frames = 20;  
+
+%how big is the grid (there is a director at every point)
+grid = [12 12 8];
+%how big is the total grid (meters?)
 cellsize = [20e-6, 20e-6, 10e-6];
+%spacing between directors
 dx = cellsize(1)/grid(1);
 dy = cellsize(2)/grid(2);
 dz = cellsize(3)/grid(3);
+%Creates a numbered grid thing
+[X, Y, Z] = ndgrid(1:grid(1),1:grid(2),1:grid(3));
+
+%bend, twist, and splay constants
 K11 = 12e-12;
 K22 = 5e-12;
 K33 = 12e-12;
 
-[X, Y, Z] = ndgrid(1:grid(1),1:grid(2),1:grid(3));
+% rotational viscosity of 0.8 Poise
+gamma = 0.08; 
 
+%% Create the boundary shape 
+
+%should create a hemisphere shaped logical array, appears to work
 hemisphere = ((X-(grid(1)+1)/2).^2./((grid(1)-1)^2/4)+(Y-(grid(2)+1)/2).^2./((grid(2)-1)^2/4)+(Z./grid(3)).^2) < 1;
 
- 
+%initialize boundary, which is the outermost layer of the hemisphere
 boundary = zeros(grid(1), grid(2), grid(3));
+
+%a hacked together but usable way to get the outermost of (I think) any
+%shape, should probaly throw it into a function
+
 for ii = 2:(size(hemisphere,1)-1)
    for jj = 2:(size(hemisphere,2)-1)
        for k = 1:size(hemisphere,3)
@@ -39,11 +57,13 @@ for ii = 2:(size(hemisphere,1)-1)
 end
 
 
+
 theta = zeros(grid(1),grid(2), grid(3));
 phi   = zeros(grid(1),grid(2), grid(3));
+flat  = hemisphere(:,:,1);
 
-phi         = phi+hemisphere.*atan((Y-(Ny+1)/2)./(X-(Nx+1)/2));
-theta       = theta+hemisphere.*acos((Z-(Nz+1)/2)./sqrt((X-(Nx+1)/2).^2+(Y-(Ny+1)/2).^2+(Z-(Nz+1)/2).^2));
+phi         = phi+hemisphere.*atan((Y-(grid(2)+1)/2)./(X-(grid(1)+1)/2));
+theta       = theta+hemisphere.*acos((Z-(grid(3)+1)/2)./sqrt((X-(grid(1)+1)/2).^2+(Y-(grid(2)+1)/2).^2+(Z-(grid(3)+1)/2).^2));
 theta(flat) = pi/2;
     
 
@@ -111,7 +131,7 @@ end
 
 
  nMatrix = randn(grid(1),grid(2),grid(3),3);
- nMatrix(:,:,:,3) = 0;
+ nMatrix(:,:,:,3mor) = 0;
 
 %% set some boundary conditions. these should be enforced at each step.
 %nMatrix(:,:,1,1) = 1; %Y(:,:,1) - (grid(2)+1)/2;
@@ -162,12 +182,14 @@ snapnum = 2;
 %% handle the calculations
 for ii = 2:numsteps
     % calulate step sizes
+    %grab the EL terms
     [ELx, ELy, ELz] = EL_terms(nMatrix,K11,K22,K33,dx,dy,dz);
     nMatrix(:,:,:,1) = nMatrix(:,:,:,1) - timestep/gamma*ELx;
     nMatrix(:,:,:,2) = nMatrix(:,:,:,2) - timestep/gamma*ELy;
     nMatrix(:,:,:,3) = nMatrix(:,:,:,3) - timestep/gamma*ELz;
     
-    % enforce BC's
+    %% enforce BC's
+    %should maybe make enforcing BCs a function. 
     %nMatrix(:,:,1,1) = Y(:,:,1) - (grid(2)+1)/2;
     %nMatrix(:,:,1,2) = -X(:,:,1) + (grid(1)+1)/2;
     %nMatrix(:,:,1,3) = 0;
@@ -186,6 +208,8 @@ for ii = 2:numsteps
     nMatrix(:,:,:,2) = nMatrix(:,:,:,2).*(hemisphere);
     nMatrix(:,:,:,3) = nMatrix(:,:,:,3).*(hemisphere);
     
+    
+    %for sure find a way to vectorize this. 
    nMatrix = setBoundary(nMatrix, boundary, norm);
 
 
@@ -194,6 +218,7 @@ for ii = 2:numsteps
     nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,4)),[1 1 1 3]);
     nMatrix(isnan(nMatrix)) = 0;  
     
+    %save at the certain points we care about. 
     if any(ii==snapshot)
         fprintf('%d%%\n',round(100*ii/numsteps))
         maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...

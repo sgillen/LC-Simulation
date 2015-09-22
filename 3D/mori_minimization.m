@@ -10,7 +10,7 @@ numsteps = 2000;
 frames = 20;  
 
 %how big is the grid (there is a director at every point)
-grid = [12 12 8];
+grid = [24 24 16];
 %how big is the total grid (meters?)
 cellsize = [20e-6, 20e-6, 10e-6];
 %spacing between directors
@@ -28,6 +28,16 @@ K33 = 12e-12;
 % rotational viscosity of 0.8 Poise
 gamma = 0.08; 
 
+
+%% begin with some initial configuration
+
+% each point in the matrix has an x y and z component, so nMatrix(x,y,z,1)
+% is the x component of the point at (x,y,z) etc.
+
+ nMatrix = randn(grid(1),grid(2),grid(3),3);
+ nMatrix(:,:,:,3) = 0;
+
+
 %% Create the boundary shape 
 
 %should create a hemisphere shaped logical array, appears to work
@@ -38,7 +48,6 @@ boundary = zeros(grid(1), grid(2), grid(3));
 
 %a hacked together but usable way to get the outermost of (I think) any
 %shape, should probaly throw it into a function
-
 for ii = 2:(size(hemisphere,1)-1)
    for jj = 2:(size(hemisphere,2)-1)
        for k = 1:size(hemisphere,3)
@@ -56,22 +65,22 @@ for ii = 2:(size(hemisphere,1)-1)
    end
 end
 
-
-
 theta = zeros(grid(1),grid(2), grid(3));
 phi   = zeros(grid(1),grid(2), grid(3));
 flat  = hemisphere(:,:,1);
 
-phi         = phi+hemisphere.*atan((Y-(grid(2)+1)/2)./(X-(grid(1)+1)/2));
+%we need to use atan2 here, which is the 4 quadrent arctan. normally we use
+%theta = atan(y/x) with atan2 it's theta = atan2(y,x). this allows matlab
+%to vary the angle between 0 and 2pi rather than -pi/2 to pi/2
+phi         = phi+hemisphere.*atan2((Y-(grid(2)+1)/2),(X-(grid(1)+1)/2));
 theta       = theta+hemisphere.*acos((Z-(grid(3)+1)/2)./sqrt((X-(grid(1)+1)/2).^2+(Y-(grid(2)+1)/2).^2+(Z-(grid(3)+1)/2).^2));
 theta(flat) = pi/2;
-    
+
 
 %array of normal vectors, of course it only really makes sense to define a
 %normal vector on the surface, but since we're only using those points
 %anyway that won't really matter
 norm = zeros(grid(1), grid(2), grid(3), 3);
-
 norm(:,:,:,1) = sin(theta).*cos(phi).*hemisphere;   %.*((xscaled>0)-0.5)*2;   %David had this line here at the end,I'm not too sure we'll need it, let's see
 norm(:,:,:,2) = sin(theta).*sin(phi).*hemisphere;  %.*((xscaled>0)-0.5)*2;    
 norm(:,:,:,3) = cos(theta).*hemisphere;
@@ -115,37 +124,12 @@ end
 %boundary
 %edge(:,:,end-1)=hemisphere(:,:,end-1)
 
-%% begin with some initial configuration
-
-% each point in the matrix has an x y and z component, so nMatrix(x,y,z,1)
-% is the x component of the point at (x,y,z) etc.
-
-
-% nMatrix = ones(grid(1),grid(2),grid(3),3);
-% nMatrix(:,:,:,1) = 0;
-% nMatrix(:,:,:,3) = 0;
-
-% nMatrix(:,:,:,1) = repmat(Y(:,:,1) - (grid(2)+1)/2,1,1,grid(3));
-% nMatrix(:,:,:,2) = repmat(-X(:,:,1) + (grid(1)+1)/2,1,1,grid(3));
-% nMatrix(:,:,:,3) = 0;
-
-
- nMatrix = randn(grid(1),grid(2),grid(3),3);
- nMatrix(:,:,:,3mor) = 0;
-
 %% set some boundary conditions. these should be enforced at each step.
-%nMatrix(:,:,1,1) = 1; %Y(:,:,1) - (grid(2)+1)/2;
-%nMatrix(:,:,1,2) = 0; %-X(:,:,1) + (grid(1)+1)/2;
-%nMatrix(:,:,1,3) = 0;
-
-%nMatrix(:,:,end,1) = 0;
-%nMatrix(:,:,end,2) = 1;
-%nMatrix(:,:,end,3) = 0;
 
 %kind of like a very strong torque
-nMatrix(:,:,1,1) = 0;
-nMatrix(:,:,1,2) = 1;
-nMatrix(:,:,1,3) = 0;
+%nMatrix(:,:,1,1) = 0;
+%nMatrix(:,:,1,2) = 1;
+%nMatrix(:,:,1,3) = 0;
 
 %hemisphere is zero outside the boundary so this effectively sets
 %everything outside the droplet to zero 
@@ -154,8 +138,10 @@ nMatrix(:,:,:,1) = nMatrix(:,:,:,1).*double(hemisphere);
 nMatrix(:,:,:,2) = nMatrix(:,:,:,2).*double(hemisphere);
 nMatrix(:,:,:,3) = nMatrix(:,:,:,3).*double(hemisphere);
 
+  nMatrix = setBoundary(nMatrix, boundary, norm);
 
-%nMatrix = setBoundary(nMatrix, boundary, grad);
+
+
 
 
 %% do some other things
@@ -168,8 +154,6 @@ nMatrix(isnan(nMatrix)) = 0;
 
 % initialize arrays that we can use to watch the system evolve
 vs = repmat(zeros(size(nMatrix)),1,1,1,1,frames);
-
-
 vs(:,:,:,:,1) = nMatrix;
 
 % take a picture whenever we hit one of the following time periods
@@ -194,22 +178,17 @@ for ii = 2:numsteps
     %nMatrix(:,:,1,2) = -X(:,:,1) + (grid(1)+1)/2;
     %nMatrix(:,:,1,3) = 0;
     
-    
-    %nMatrix(:,:,end,1) = 0;
-    %nMatrix(:,:,end,2) = 1;
-    %nMatrix(:,:,end,3) = 0;
-    
-    nMatrix(:,:,1,1) = 0;   
-    nMatrix(:,:,1,2) = 1;
-    nMatrix(:,:,1,3) = 0;
+    %nMatrix(:,:,1,1) = 0;   
+    %nMatrix(:,:,1,2) = 1;
+    %nMatrix(:,:,1,3) = 0;
 
     
-    nMatrix(:,:,:,1) = nMatrix(:,:,:,1).*(hemisphere);
-    nMatrix(:,:,:,2) = nMatrix(:,:,:,2).*(hemisphere);
-    nMatrix(:,:,:,3) = nMatrix(:,:,:,3).*(hemisphere);
+    %nMatrix(:,:,:,1) = nMatrix(:,:,:,1).*(hemisphere);
+    %nMatrix(:,:,:,2) = nMatrix(:,:,:,2).*(hemisphere);
+    %nMatrix(:,:,:,3) = nMatrix(:,:,:,3).*(hemisphere);
     
     
-    %for sure find a way to vectorize this. 
+   %for sure find a way to vectorize this. 
    nMatrix = setBoundary(nMatrix, boundary, norm);
 
 

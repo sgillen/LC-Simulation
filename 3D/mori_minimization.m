@@ -5,12 +5,12 @@
 %how long (in seconds) should each timestep be?
 timestep = 0.0005; 
 %number of time steps to take
-numsteps = 2000; 
+numsteps = 1000; 
 %number of time frames to save
 frames = 20;  
 
 %how big is the grid (there is a director at every point)
-grid = [24 24 16];
+grid = [3  3  8];
 %how big is the total grid (meters?)
 cellsize = [20e-6, 20e-6, 10e-6];
 %spacing between directors
@@ -35,16 +35,18 @@ gamma = 0.08;
 % is the x component of the point at (x,y,z) etc.
 
  nMatrix = randn(grid(1),grid(2),grid(3),3);
- nMatrix(:,:,:,3) = 0;
+ %nMatrix(:,:,:,3) = 0;
 
 
 %% Create the boundary shape 
-
+%{
 %should create a hemisphere shaped logical array, appears to work
 hemisphere = ((X-(grid(1)+1)/2).^2./((grid(1)-1)^2/4)+(Y-(grid(2)+1)/2).^2./((grid(2)-1)^2/4)+(Z./grid(3)).^2) < 1;
 
 %initialize boundary, which is the outermost layer of the hemisphere
-boundary = zeros(grid(1), grid(2), grid(3));
+boundary(:,:,:,1) = zeros(grid(1), grid(2), grid(3));
+boundary(:,:,:,2) = zeros(grid(1), grid(2), grid(3));
+boundary(:,:,:,3) = zeros(grid(1), grid(2), grid(3));
 
 %a hacked together but usable way to get the outermost of (I think) any
 %shape, should probaly throw it into a function
@@ -54,9 +56,9 @@ for ii = 2:(size(hemisphere,1)-1)
            
            if(hemisphere(ii,jj,k) == 1) %only pick out points which were previously inside the hemisphere                                                 
                 if(hemisphere(ii,jj+1,k) + hemisphere(ii,jj-1,k) == 1)                                                                                                                
-                     boundary(ii,jj,k) = 1;
+                     boundary(ii,jj,k,:) = 1;
                 elseif (hemisphere(ii+1,jj,k) + hemisphere(ii-1,jj,k) == 1)
-                     boundary(ii,jj,k) = 1;
+                     boundary(ii,jj,k,:) = 1;
                 end
                 
            end 
@@ -121,25 +123,29 @@ end
 
 %}
  
-%boundary
-%edge(:,:,end-1)=hemisphere(:,:,end-1)
-
+%}
 %% set some boundary conditions. these should be enforced at each step.
 
 %kind of like a very strong torque
-%nMatrix(:,:,1,1) = 0;
-%nMatrix(:,:,1,2) = 1;
-%nMatrix(:,:,1,3) = 0;
+nMatrix(:,:,1,1) = 0;
+nMatrix(:,:,1,2) = 1;
+nMatrix(:,:,1,3) = 0;
+
+nMatrix(:,:,end,1) = .5;
+nMatrix(:,:,end,2) = .5;
+nMatrix(:,:,end,3) = 0;
+
 
 %hemisphere is zero outside the boundary so this effectively sets
 %everything outside the droplet to zero 
 
+%{
 nMatrix(:,:,:,1) = nMatrix(:,:,:,1).*double(hemisphere);
 nMatrix(:,:,:,2) = nMatrix(:,:,:,2).*double(hemisphere);
 nMatrix(:,:,:,3) = nMatrix(:,:,:,3).*double(hemisphere);
 
-  nMatrix = setBoundary(nMatrix, boundary, norm);
-
+nMatrix = setstrongboundary(nMatrix, boundary, norm);
+%}
 
 
 
@@ -178,10 +184,13 @@ for ii = 2:numsteps
     %nMatrix(:,:,1,2) = -X(:,:,1) + (grid(1)+1)/2;
     %nMatrix(:,:,1,3) = 0;
     
-    %nMatrix(:,:,1,1) = 0;   
-    %nMatrix(:,:,1,2) = 1;
-    %nMatrix(:,:,1,3) = 0;
+     nMatrix(:,:,1,1) = 0;
+     nMatrix(:,:,1,2) = 1;
+     nMatrix(:,:,1,3) = 0;
 
+     nMatrix(:,:,end,1) = .5;    
+     nMatrix(:,:,end,2) = .5;
+     nMatrix(:,:,end,3) = 0;
     
     %nMatrix(:,:,:,1) = nMatrix(:,:,:,1).*(hemisphere);
     %nMatrix(:,:,:,2) = nMatrix(:,:,:,2).*(hemisphere);
@@ -189,7 +198,7 @@ for ii = 2:numsteps
     
     
    %for sure find a way to vectorize this. 
-   nMatrix = setBoundary(nMatrix, boundary, norm);
+   %nMatrix = setstrongboundary(nMatrix, boundary, norm);
 
 
    
@@ -225,8 +234,8 @@ set(q2,'ShowArrowHead','off')
 
 figure(2)
 clf
-q3 = quiver3(X-vx./2,Y-vy./2,Z-vz./2,vx,vy,vz);
-set(q3,'ShowArrowHead','off')
+%q3 = quiver3(X-vx./2,Y-vy./2,Z-vz./2,vx,vy,vz);
+%set(q3,'ShowArrowHead','off')
 
 figure(3)
 clf

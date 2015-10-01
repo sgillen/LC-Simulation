@@ -3,14 +3,14 @@
 
 %% initialize a grid and other parameters
 %how long (in seconds) should each timestep be?
-timestep = 0.0005; 
+timestep = 0.0025; 
 %number of time steps to take
-numsteps = 1000; 
+numsteps = 4000; 
 %number of time frames to save
 frames = 20;  
 
 %how big is the grid (there is a director at every point)
-grid = [3  3  8];
+grid = [12  12  8];
 %how big is the total grid (meters?)
 cellsize = [20e-6, 20e-6, 10e-6];
 %spacing between directors
@@ -209,9 +209,13 @@ for ii = 2:numsteps
     %save at the certain points we care about. 
     if any(ii==snapshot)
         fprintf('%d%%\n',round(100*ii/numsteps))
-        maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...
-            max(ELz(:))]);
-        fprintf('%d\n',maxstep(snapnum))
+        
+        avg(snapnum) = mean2(lc_energy(nMatrix, K11, K22, K33, dx, dy, dz));
+        fprintf('%d\n', avg(snapnum))
+    
+%         maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...
+%             max(ELz(:))]);
+%         fprintf('%d\n',maxstep(snapnum))
         vs(:,:,:,:,snapnum) = nMatrix;
         snapnum = snapnum + 1;
     end
@@ -234,12 +238,12 @@ set(q2,'ShowArrowHead','off')
 
 figure(2)
 clf
-%q3 = quiver3(X-vx./2,Y-vy./2,Z-vz./2,vx,vy,vz);
-%set(q3,'ShowArrowHead','off')
+q3 = quiver3(X-vx./2,Y-vy./2,Z-vz./2,vx,vy,vz);
+set(q3,'ShowArrowHead','off')
 
 figure(3)
 clf
-plot(maxstep(2:end))
+plot(avg(2:end))
 
 
 %% let's throw this to mathematica for more analysis

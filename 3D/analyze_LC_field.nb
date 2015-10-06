@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16749,        398]
-NotebookOptionsPosition[     16060,        369]
-NotebookOutlinePosition[     16397,        384]
-CellTagsIndexPosition[     16354,        381]
+NotebookDataLength[     36488,        867]
+NotebookOptionsPosition[     35271,        823]
+NotebookOutlinePosition[     35608,        838]
+CellTagsIndexPosition[     35565,        835]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -26,8 +26,8 @@ Cell[BoxData[{
    RowBox[{
     RowBox[{"Import", "[", 
      RowBox[{
-      RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<n_final.mat\>\""}], 
-     "]"}], "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
+      RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<n.mat\>\""}], "]"}],
+     "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Dimensions", "@", "nMatrix"}], ";"}], "\[IndentingNewLine]", 
@@ -63,7 +63,12 @@ Cell[BoxData[{
   3.63810512750988*^9}, {3.638106449835224*^9, 3.638106463153811*^9}, {
   3.638106722549707*^9, 3.63810672914639*^9}, {3.63810676643363*^9, 
   3.638106768001676*^9}, {3.638123937867543*^9, 3.63812403576301*^9}, {
-  3.638125206623732*^9, 3.638125214125593*^9}}],
+  3.638125206623732*^9, 3.638125214125593*^9}, {3.651932035225957*^9, 
+  3.6519320360165663`*^9}, {3.652492495379471*^9, 3.65249252810673*^9}, {
+  3.652492671161099*^9, 3.652492674109415*^9}, {3.652537326409737*^9, 
+  3.652537342984159*^9}, {3.6525374240087852`*^9, 3.652537444099807*^9}, {
+  3.6525377147628098`*^9, 3.6525377197269793`*^9}, {3.652723510962512*^9, 
+  3.6527235135987062`*^9}}],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -96,7 +101,65 @@ Cell[BoxData[
    3.639756438946618*^9}, 3.639756537210758*^9, {3.639756587115903*^9, 
    3.6397566100510263`*^9}, 3.639756726741983*^9, 3.639756765045431*^9, 
    3.639756795848864*^9, 3.6397569326279993`*^9, 3.6397569949139223`*^9, 
-   3.639757688817171*^9, 3.6462556076044617`*^9}]
+   3.639757688817171*^9, 3.6462556076044617`*^9, 3.651878254651298*^9, 
+   3.651881171534287*^9, 3.6519320413724947`*^9, 3.651932333229562*^9, 
+   3.651932942554019*^9, 3.652492235334818*^9, {3.652492530190374*^9, 
+   3.652492536023963*^9}, {3.6524926619710207`*^9, 3.652492676481333*^9}, 
+   3.652492837557521*^9, 3.6524960422107964`*^9, 3.652526603401886*^9, 
+   3.6525272416381817`*^9, 3.652529500940123*^9, 3.65253022026598*^9, 
+   3.65253523587332*^9, 3.652535347579473*^9, 3.652535894325891*^9, {
+   3.652537346848515*^9, 3.652537363851317*^9}, {3.6525374319075413`*^9, 
+   3.652537450974346*^9}, {3.6525377209443893`*^9, 3.652537724317513*^9}, 
+   3.652537822439567*^9, 3.652723485327074*^9, 3.652723519899926*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"ArcTan", "@@", "#"}], "&"}], "/@", 
+   RowBox[{"nMatrix", "\[LeftDoubleBracket]", 
+    RowBox[{
+     RowBox[{"-", "1"}], ",", "2", ",", "2", ",", ";;", ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}]}], "\[RightDoubleBracket]"}]}], "//", 
+  "ListPlot"}]], "Input",
+ CellChangeTimes->{{3.652537823573943*^9, 3.652537938731915*^9}, {
+  3.65253797563512*^9, 3.652538032586372*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{}, 
+    {RGBColor[0.368417, 0.506779, 0.709798], PointSize[0.019444444444444445`],
+      AbsoluteThickness[1.6], 
+     PointBox[{{1., 1.5707963267948966`}, {2., 1.1914856916728658`}, {3., 
+      0.08347194693059809}, {4., 0.3913966146638365}, {5., 
+      0.4224411492946335}, {6., 0.6740452292486744}, {7., 
+      0.6514922632667615}, {8., 0.7853981633974483}}]}, {}}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  DisplayFunction->Identity,
+  Frame->{{False, False}, {False, False}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{},
+  PlotRange->{{0., 8.}, {0, 1.5707963267948966`}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.6525378258437443`*^9, 3.652537940783559*^9}, {
+   3.652537984625483*^9, 3.652538033094455*^9}, 3.65272348550424*^9, 
+   3.6527235201165*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -109,10 +172,10 @@ Cell[BoxData[
  RowBox[{"{", 
   RowBox[{"20", ",", "12", ",", "12", ",", "8", ",", "3"}], "}"}]], "Output",
  CellChangeTimes->{
-  3.639756448870428*^9, 3.639756537572843*^9, {3.639756587494587*^9, 
-   3.6397566103686647`*^9}, 3.6397567271256638`*^9, {3.6397567654824257`*^9, 
-   3.639756796247793*^9}, 3.639756933109627*^9, 3.639756995200902*^9, 
-   3.639757688853867*^9, 3.646255607787754*^9}]
+  3.652530220492318*^9, 3.652535236101698*^9, 3.65253534781243*^9, 
+   3.652535894555653*^9, {3.6525373470934563`*^9, 3.6525373640906057`*^9}, {
+   3.652537432489129*^9, 3.652537451468555*^9}, 3.652537724556218*^9, 
+   3.652723485525404*^9, 3.652723520144659*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -127,7 +190,9 @@ Cell[BoxData[
        RowBox[{";;", "2"}]}], "\[RightDoubleBracket]"}], ",", 
      RowBox[{"VectorStyle", "\[Rule]", 
       RowBox[{"Arrowheads", "[", "0", "]"}]}], ",", 
-     RowBox[{"VectorPoints", "\[Rule]", "All"}]}], "]"}], ",", 
+     RowBox[{"VectorPoints", "\[Rule]", "All"}], ",", " ", 
+     RowBox[{"VectorScale", "\[Rule]", 
+      RowBox[{"{", ".1", "}"}]}]}], "]"}], ",", 
    RowBox[{"{", 
     RowBox[{"frame", ",", "1", ",", "frames", ",", "1"}], "}"}], ",", 
    RowBox[{"{", 
@@ -136,26 +201,29 @@ Cell[BoxData[
   3.638124040098147*^9, 3.638124042539165*^9}, {3.638125493827467*^9, 
   3.6381254980718117`*^9}, {3.638127511104062*^9, 3.638127532780603*^9}, {
   3.638127564407713*^9, 3.638127567308112*^9}, {3.639756386442417*^9, 
-  3.639756413577014*^9}, {3.639756824128332*^9, 3.63975683770612*^9}}],
+  3.639756413577014*^9}, {3.639756824128332*^9, 3.63975683770612*^9}, {
+  3.6519329499688272`*^9, 3.6519329595213842`*^9}, {3.651941268078187*^9, 
+  3.65194130751439*^9}, {3.651941352941453*^9, 3.6519414643447657`*^9}, {
+  3.6524922471933403`*^9, 3.652492249006557*^9}}],
 
 Cell[BoxData[
  TagBox[
   StyleBox[
-   DynamicModuleBox[{$CellContext`frame$$ = 20, $CellContext`zz$$ = 4, 
+   DynamicModuleBox[{$CellContext`frame$$ = 20, $CellContext`zz$$ = 7, 
     Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
     Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
     1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
       Hold[$CellContext`frame$$], 1, 20, 1}, {
       Hold[$CellContext`zz$$], 1, 8, 1}}, Typeset`size$$ = {
     360., {178., 184.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
-    Typeset`skipInitDone$$ = True, $CellContext`frame$4358$$ = 
-    0, $CellContext`zz$4359$$ = 0}, 
+    Typeset`skipInitDone$$ = True, $CellContext`frame$7173$$ = 
+    0, $CellContext`zz$7174$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`frame$$ = 1, $CellContext`zz$$ = 1}, 
       "ControllerVariables" :> {
-        Hold[$CellContext`frame$$, $CellContext`frame$4358$$, 0], 
-        Hold[$CellContext`zz$$, $CellContext`zz$4359$$, 0]}, 
+        Hold[$CellContext`frame$$, $CellContext`frame$7173$$, 0], 
+        Hold[$CellContext`zz$$, $CellContext`zz$7174$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -164,9 +232,188 @@ Cell[BoxData[
         Part[$CellContext`nMatrix, $CellContext`frame$$, 
          Span[1, All], 
          Span[1, All], $CellContext`zz$$, 
-         Span[1, 2]], VectorStyle -> Arrowheads[0], VectorPoints -> All], 
+         Span[1, 2]], VectorStyle -> Arrowheads[0], VectorPoints -> All, 
+        VectorScale -> {0.1}], 
       "Specifications" :> {{$CellContext`frame$$, 1, 20, 
          1}, {$CellContext`zz$$, 1, 8, 1}}, "Options" :> {}, 
+      "DefaultOptions" :> {}],
+     ImageSizeCache->{407., {255., 262.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.6527234856452837`*^9, 3.652723520194805*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Part", "::", "pkspec1"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The expression \[NoBreak]\\!\\(Null\\)\[NoBreak] cannot be \
+used as a part specification. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, ButtonData:>\\\"paclet:ref/Part\
+\\\", ButtonNote -> \\\"Part::pkspec1\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.652970641302883*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Visualization`Core`ListVectorPlot", "::", "vfldata"}], 
+   "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\(\\({\\(\[LeftSkeleton] 1 \
+\[RightSkeleton]\\)}\\)\\) \[LeftDoubleBracket] \\(\\(8, \\(\\(1 ;; \
+All\\)\\), \\(\\(1 ;; All\\)\\), Null, \\(\\(1 ;; 2\\)\\)\\)\\) \
+\[RightDoubleBracket]\\)\[NoBreak] is not a valid vector field dataset or a \
+valid list of datasets.\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.652970642361019*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Part", "::", "pkspec1"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The expression \[NoBreak]\\!\\(Null\\)\[NoBreak] cannot be \
+used as a part specification. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, ButtonData:>\\\"paclet:ref/Part\
+\\\", ButtonNote -> \\\"Part::pkspec1\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.652970648777781*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Visualization`Core`ListVectorPlot", "::", "vfldata"}], 
+   "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\(\\({\\(\[LeftSkeleton] 1 \
+\[RightSkeleton]\\)}\\)\\) \[LeftDoubleBracket] \\(\\(20, \\(\\(1 ;; \
+All\\)\\), \\(\\(1 ;; All\\)\\), Null, \\(\\(1 ;; 2\\)\\)\\)\\) \
+\[RightDoubleBracket]\\)\[NoBreak] is not a valid vector field dataset or a \
+valid list of datasets.\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.652970649646298*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Part", "::", "partd"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Part specification \[NoBreak]\\!\\({\\(\\({\\(\
+\[LeftSkeleton] 1 \[RightSkeleton]\\)}\\)\\), \\(\\(\[LeftSkeleton] 18 \
+\[RightSkeleton]\\)\\), \\(\\({\\(\\({\\(\\({\\(\\({0.`, 1.`, 0.`}\\)\\), \\(\
+\\({\\(\\(-0.5839585272267506`\\)\\), \\(\\(-0.5912506027631526`\\)\\), \
+\\(\\(-0.5562509894026016`\\)\\)}\\)\\), \\(\\({0.6992051274314842`, \
+0.7074808930504461`, \\(\\(-0.10287359108179985`\\)\\)}\\)\\), \
+\\(\\({0.7240844927994411`, 0.6844049407657163`, 0.08539042301600443`}\\)\\), \
+\\(\\({0.6815532630194007`, 0.706019058999405`, 0.192411636854953`}\\)\\), \
+\\(\\({0.697567529731005`, 0.7130112928588435`, \
+\\(\\(-0.07081269462987701`\\)\\)}\\)\\), \\(\\({0.6797702955153704`, \
+0.7158101080454385`, 0.15977557558939923`}\\)\\), \\(\\({0.7071067811865475`, \
+0.7071067811865475`, 0.`}\\)\\)}\\)\\), \\(\\(\[LeftSkeleton] 11 \
+\[RightSkeleton]\\)\\)}\\)\\), \\(\\(\[LeftSkeleton] 11 \
+\[RightSkeleton]\\)\\)}\\)\\)}\\)\[NoBreak] is longer than depth of object. \
+\\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\\\", \
+ButtonFrame->None, ButtonData:>\\\"paclet:ref/message/General/partd\\\", \
+ButtonNote -> \\\"Part::partd\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6529706609704657`*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"Visualization`Core`ListVectorPlot", "::", "vfldata"}], 
+   "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"\[NoBreak]\\!\\(\\(\\({\\(\[LeftSkeleton] 1 \
+\[RightSkeleton]\\)}\\)\\) \[LeftDoubleBracket] \\(\\(20, \\(\\(1 ;; \
+All\\)\\), \\(\\(1 ;; All\\)\\), 0, \\(\\(1 ;; 2\\)\\)\\)\\) \
+\[RightDoubleBracket]\\)\[NoBreak] is not a valid vector field dataset or a \
+valid list of datasets.\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.652970661963428*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  TagBox[
+   StyleBox[
+    DynamicModuleBox[{$CellContext`frame$$ = 20, $CellContext`zz$$ = 8, 
+     Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+     Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+     1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+       Hold[$CellContext`frame$$], 1, 20, 1}, {
+       Hold[$CellContext`zz$$], 1, 8, 1}}, Typeset`size$$ = {
+     360., {178., 184.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+     Typeset`skipInitDone$$ = True, $CellContext`frame$56167$$ = 
+     0, $CellContext`zz$56168$$ = 0}, 
+     DynamicBox[Manipulate`ManipulateBoxes[
+      1, StandardForm, 
+       "Variables" :> {$CellContext`frame$$ = 1, $CellContext`zz$$ = 1}, 
+       "ControllerVariables" :> {
+         Hold[$CellContext`frame$$, $CellContext`frame$56167$$, 0], 
+         Hold[$CellContext`zz$$, $CellContext`zz$56168$$, 0]}, 
+       "OtherVariables" :> {
+        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+         Typeset`specs$$, Typeset`size$$, Typeset`update$$, 
+         Typeset`initDone$$, Typeset`skipInitDone$$}, "Body" :> ListVectorPlot[
+         Part[$CellContext`nMatrix, $CellContext`frame$$, 
+          Span[1, All], 
+          Span[1, All], $CellContext`zz$$, 
+          Span[1, 2]], VectorStyle -> Arrowheads[0], VectorPoints -> All, 
+         VectorScale -> {0.1}], 
+       "Specifications" :> {{$CellContext`frame$$, 1, 20, 
+          1}, {$CellContext`zz$$, 1, 8, 1}}, "Options" :> {}, 
+       "DefaultOptions" :> {}],
+      ImageSizeCache->{407., {234., 241.}},
+      SingleEvaluation->True],
+     Deinitialization:>None,
+     DynamicModuleValues:>{},
+     SynchronousInitialization->True,
+     UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+     UnsavedVariables:>{Typeset`initDone$$},
+     UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+    Deployed->True,
+    StripOnInput->False],
+   Manipulate`InterpretManipulate[1]], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", "nMatrix"}], "Input",
+ CellChangeTimes->{{3.652537758026232*^9, 3.652537805964657*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`frame$$ = 20, $CellContext`zz$$ = 8, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`frame$$], 20}, 1, 20, 1}, {{
+       Hold[$CellContext`zz$$], 8}, 1, 8, 1}}, Typeset`size$$ = {
+    360., {178., 184.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`frame$7279$$ = 
+    0, $CellContext`zz$7280$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`frame$$ = 20, $CellContext`zz$$ = 8}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`frame$$, $CellContext`frame$7279$$, 0], 
+        Hold[$CellContext`zz$$, $CellContext`zz$7280$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> ListVectorPlot[
+        Part[$CellContext`nMatrix, $CellContext`frame$$, 
+         Span[1, All], 
+         Span[1, All], $CellContext`zz$$, 
+         Span[1, 2]], VectorStyle -> Arrowheads[0], VectorPoints -> All, 
+        VectorScale -> {0.1}], 
+      "Specifications" :> {{{$CellContext`frame$$, 20}, 1, 20, 
+         1}, {{$CellContext`zz$$, 8}, 1, 8, 1}}, "Options" :> {}, 
       "DefaultOptions" :> {}],
      ImageSizeCache->{407., {234., 241.}},
      SingleEvaluation->True],
@@ -179,11 +426,210 @@ Cell[BoxData[
    Deployed->True,
    StripOnInput->False],
   Manipulate`InterpretManipulate[1]]], "Output",
- CellChangeTimes->{{3.639756414643506*^9, 3.6397564414756527`*^9}, 
-   3.639756542690947*^9, {3.6397565890559587`*^9, 3.639756616506526*^9}, 
-   3.639756728368346*^9, 3.639756766850152*^9, {3.6397567978497057`*^9, 
-   3.639756838334517*^9}, 3.639756933599875*^9, 3.639756995521275*^9, 
-   3.639757688899398*^9, 3.6462556079032917`*^9}]
+ CellChangeTimes->{{3.652537800780418*^9, 3.65253780669029*^9}, 
+   3.652723485688118*^9, 3.652723520397336*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  TagBox[
+   FrameBox[GridBox[{
+      {
+       ItemBox[
+        TagBox[
+         RowBox[{"{", 
+          TemplateBox[{"1"},
+           "OutputSizeLimit`Skeleton",
+           DisplayFunction->(FrameBox[
+             RowBox[{"\" \[CenterEllipsis]\"", #, "\"\[CenterEllipsis] \""}], 
+             Background -> GrayLevel[0.75], 
+             BaseStyle -> {
+              "Deploy", FontColor -> GrayLevel[1], FontSize -> Smaller, 
+               ShowStringCharacters -> False}, BaselinePosition -> Baseline, 
+             ContentPadding -> False, FrameMargins -> 1, FrameStyle -> 
+             GrayLevel[0.75], RoundingRadius -> 7]& )], "}"}],
+         Short[#, 5]& ],
+        BaseStyle->{Deployed -> False},
+        StripOnInput->False]},
+      {GridBox[{
+         {
+          TagBox[
+           TooltipBox[
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource[
+                "FEStrings", "sizeBriefExplanation"], StandardForm],
+               ImageSizeCache->{68., {2., 9.}}],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarCategory",
+             StripOnInput->False],
+            StyleBox[
+             DynamicBox[
+              ToBoxes[
+               FEPrivate`FrontEndResource["FEStrings", "sizeExplanation"], 
+               StandardForm]], DynamicUpdating -> True, StripOnInput -> 
+             False]],
+           Annotation[#, 
+            Style[
+             Dynamic[
+              FEPrivate`FrontEndResource["FEStrings", "sizeExplanation"]], 
+             DynamicUpdating -> True], "Tooltip"]& ], 
+          ButtonBox[
+           PaneSelectorBox[{False->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeShowLess"], 
+                StandardForm],
+               ImageSizeCache->{64., {0., 9.}}],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControl",
+             StripOnInput->False], True->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeShowLess"], 
+                StandardForm]],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControlActive",
+             StripOnInput->False]}, Dynamic[
+             CurrentValue["MouseOver"]],
+            Alignment->Center,
+            FrameMargins->0,
+            ImageSize->{Automatic, 25}],
+           Appearance->None,
+           
+           ButtonFunction:>OutputSizeLimit`ButtonFunction[
+            Identity, 23, 30985176800664516358, 5/2],
+           Enabled->True,
+           Evaluator->Automatic,
+           Method->"Queued"], 
+          ButtonBox[
+           PaneSelectorBox[{False->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeShowMore"], 
+                StandardForm],
+               ImageSizeCache->{70., {0., 9.}}],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControl",
+             StripOnInput->False], True->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeShowMore"], 
+                StandardForm]],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControlActive",
+             StripOnInput->False]}, Dynamic[
+             CurrentValue["MouseOver"]],
+            Alignment->Center,
+            FrameMargins->0,
+            ImageSize->{Automatic, 25}],
+           Appearance->None,
+           
+           ButtonFunction:>OutputSizeLimit`ButtonFunction[
+            Identity, 23, 30985176800664516358, 5 2],
+           Enabled->True,
+           Evaluator->Automatic,
+           Method->"Queued"], 
+          ButtonBox[
+           PaneSelectorBox[{False->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeShowAll"], 
+                StandardForm],
+               ImageSizeCache->{54., {0., 9.}}],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControl",
+             StripOnInput->False], True->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeShowAll"], 
+                StandardForm]],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControlActive",
+             StripOnInput->False]}, Dynamic[
+             CurrentValue["MouseOver"]],
+            Alignment->Center,
+            FrameMargins->0,
+            ImageSize->{Automatic, 25}],
+           Appearance->None,
+           
+           ButtonFunction:>OutputSizeLimit`ButtonFunction[
+            Identity, 23, 30985176800664516358, Infinity],
+           Enabled->True,
+           Evaluator->Automatic,
+           Method->"Queued"], 
+          ButtonBox[
+           PaneSelectorBox[{False->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeChangeLimit"], 
+                StandardForm],
+               ImageSizeCache->{94., {0., 9.}}],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControl",
+             StripOnInput->False], True->
+            StyleBox[
+             StyleBox[
+              DynamicBox[ToBoxes[
+                FEPrivate`FrontEndResource["FEStrings", "sizeChangeLimit"], 
+                StandardForm]],
+              StripOnInput->False,
+              DynamicUpdating->True], "SuggestionsBarControlActive",
+             StripOnInput->False]}, Dynamic[
+             CurrentValue["MouseOver"]],
+            Alignment->Center,
+            FrameMargins->0,
+            ImageSize->{Automatic, 25}],
+           Appearance->None,
+           ButtonFunction:>FrontEndExecute[{
+              FrontEnd`SetOptions[
+              FrontEnd`$FrontEnd, 
+               FrontEnd`PreferencesSettings -> {"Page" -> "Evaluation"}], 
+              FrontEnd`FrontEndToken["PreferencesDialog"]}],
+           Evaluator->None,
+           Method->"Preemptive"]}
+        },
+        AutoDelete->False,
+        FrameStyle->GrayLevel[0.85],
+        GridBoxDividers->{"Columns" -> {False, {True}}},
+        GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+        GridBoxSpacings->{"Columns" -> {{2}}}]}
+     },
+     DefaultBaseStyle->"Column",
+     GridBoxAlignment->{
+      "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+       "RowsIndexed" -> {}},
+     GridBoxDividers->{
+      "Columns" -> {{False}}, "ColumnsIndexed" -> {}, "Rows" -> {{False}}, 
+       "RowsIndexed" -> {}},
+     GridBoxItemSize->{
+      "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+       "RowsIndexed" -> {}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.5599999999999999]}, 
+         Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+         Offset[0.2], 
+         Offset[1.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}, "RowsIndexed" -> {}}],
+    Background->RGBColor[0.9657, 0.9753, 0.9802],
+    FrameMargins->{{12, 12}, {0, 15}},
+    FrameStyle->GrayLevel[0.85],
+    RoundingRadius->5,
+    StripOnInput->False],
+   Deploy,
+   DefaultBaseStyle->"Deploy"],
+  Out[23]]], "Output",
+ CellChangeTimes->{{3.652537800780418*^9, 3.65253780669029*^9}, 
+   3.652723485688118*^9, 3.652723520974614*^9}]
 }, Open  ]],
 
 Cell[BoxData[{
@@ -314,13 +760,13 @@ Cell[BoxData[
       Hold[$CellContext`\[Gamma]$$], 0, Rational[1, 2] Pi}}, 
     Typeset`size$$ = {360., {177., 182.}}, Typeset`update$$ = 0, 
     Typeset`initDone$$, Typeset`skipInitDone$$ = 
-    True, $CellContext`frame$4452$$ = 0, $CellContext`\[Gamma]$4453$$ = 0}, 
+    True, $CellContext`frame$7359$$ = 0, $CellContext`\[Gamma]$7360$$ = 0}, 
     DynamicBox[Manipulate`ManipulateBoxes[
      1, StandardForm, 
       "Variables" :> {$CellContext`frame$$ = 1, $CellContext`\[Gamma]$$ = 0}, 
       "ControllerVariables" :> {
-        Hold[$CellContext`frame$$, $CellContext`frame$4452$$, 0], 
-        Hold[$CellContext`\[Gamma]$$, $CellContext`\[Gamma]$4453$$, 0]}, 
+        Hold[$CellContext`frame$$, $CellContext`frame$7359$$, 0], 
+        Hold[$CellContext`\[Gamma]$$, $CellContext`\[Gamma]$7360$$, 0]}, 
       "OtherVariables" :> {
        Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
         Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
@@ -364,7 +810,15 @@ Cell[BoxData[
    3.638128073213584*^9, 3.6382126337520103`*^9, 3.638213927256476*^9, 
    3.639149814395513*^9, {3.639149881167686*^9, 3.6391499098317623`*^9}, 
    3.6391499427325897`*^9, 3.639746902354875*^9, 3.639747454576329*^9, 
-   3.646255609308187*^9}]
+   3.646255609308187*^9, 3.651878257008544*^9, 3.6518811740730677`*^9, 
+   3.6519320421725683`*^9, 3.651932334986909*^9, 3.651932949159474*^9, 
+   3.652492235750523*^9, 3.6524925364282312`*^9, {3.652492662487771*^9, 
+   3.6524926768945913`*^9}, 3.6524928380015783`*^9, 3.652496042806999*^9, 
+   3.652526604000568*^9, 3.652527242121793*^9, 3.652529501556739*^9, 
+   3.652530220934999*^9, 3.652535236472131*^9, 3.652535348011284*^9, 
+   3.652535894801249*^9, {3.6525373473487453`*^9, 3.652537364385702*^9}, {
+   3.6525374341275587`*^9, 3.652537453100882*^9}, 3.6525377247826223`*^9, 
+   3.652723485854656*^9, 3.652723521750361*^9}]
 }, Open  ]]
 },
 WindowSize->{1366, 713},
@@ -384,21 +838,36 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 1846, 43, 121, "Input"],
-Cell[2429, 67, 2115, 31, 32, "Output"]
+Cell[580, 22, 2185, 48, 121, "Input"],
+Cell[2768, 72, 2787, 40, 32, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[4581, 103, 132, 2, 32, "Input"],
-Cell[4716, 107, 393, 7, 32, "Output"]
+Cell[5592, 117, 452, 12, 32, "Input"],
+Cell[6047, 131, 1207, 30, 244, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[5146, 119, 970, 19, 55, "Input"],
-Cell[6119, 140, 2299, 45, 525, "Output"]
+Cell[7291, 166, 132, 2, 32, "Input"],
+Cell[7426, 170, 390, 7, 32, "Output"]
 }, Open  ]],
-Cell[8433, 188, 2791, 77, 61, "Input"],
 Cell[CellGroupData[{
-Cell[11249, 269, 1463, 34, 55, "Input"],
-Cell[12715, 305, 3329, 61, 488, "Output"]
+Cell[7853, 182, 1255, 24, 55, "Input"],
+Cell[9111, 208, 2060, 42, 567, "Output"],
+Cell[11174, 252, 452, 9, 23, "Message"],
+Cell[11629, 263, 506, 11, 23, "Message"],
+Cell[12138, 276, 452, 9, 23, "Message"],
+Cell[12593, 287, 507, 11, 23, "Message"],
+Cell[13103, 300, 1348, 22, 59, "Message"],
+Cell[14454, 324, 504, 11, 23, "Message"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14995, 340, 2178, 44, 551, "Input"],
+Cell[17176, 386, 2132, 43, 492, "Output"],
+Cell[19311, 431, 7714, 200, 89, "Output"]
+}, Open  ]],
+Cell[27040, 634, 2791, 77, 61, "Input"],
+Cell[CellGroupData[{
+Cell[29856, 715, 1463, 34, 55, "Input"],
+Cell[31322, 751, 3933, 69, 488, "Output"]
 }, Open  ]]
 }
 ]

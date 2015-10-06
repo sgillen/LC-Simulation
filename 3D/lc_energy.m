@@ -2,9 +2,6 @@
 
 function energy = lc_energy(matrix, K11, K22, K33, deltax, deltay, deltaz)
 
-
-
-
 Nx = matrix(:,:,:,1);
 Ny = matrix(:,:,:,2);
 Nz = matrix(:,:,:,3);

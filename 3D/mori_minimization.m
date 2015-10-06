@@ -199,8 +199,6 @@ for ii = 2:numsteps
     
    %for sure find a way to vectorize this. 
    %nMatrix = setstrongboundary(nMatrix, boundary, norm);
-
-
    
     % renormalize and replace NaN with 0
     nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,4)),[1 1 1 3]);
@@ -210,12 +208,10 @@ for ii = 2:numsteps
     if any(ii==snapshot)
         fprintf('%d%%\n',round(100*ii/numsteps))
         
-        avg(snapnum) = mean2(lc_energy(nMatrix, K11, K22, K33, dx, dy, dz));
-        fprintf('%d\n', avg(snapnum))
+        %avg(snapnum) = mean2(lc_energy(nMatrix, K11, K22, K33, dx, dy, dz));
+        maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...
+            max(ELz(:))]);
     
-%         maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...
-%             max(ELz(:))]);
-%         fprintf('%d\n',maxstep(snapnum))
         vs(:,:,:,:,snapnum) = nMatrix;
         snapnum = snapnum + 1;
     end
@@ -243,7 +239,7 @@ set(q3,'ShowArrowHead','off')
 
 figure(3)
 clf
-plot(avg(2:end))
+plot(maxstep(2:end))
 
 
 %% let's throw this to mathematica for more analysis

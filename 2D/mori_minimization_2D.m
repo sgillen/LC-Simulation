@@ -1,12 +1,12 @@
 %% initalize variables we'll need
 % how many steps to take?
-numsteps = 20000;
+numsteps = 40000;
 % save this number of orientations to capture dynamics
 frames = 50;
 % how large of mesh?
 gridsize = [10 10];
-% how long should each step represent for dynamics? Measure in seconds.
-timestep = 0.0001;
+% how long should each step represent for dynamics? Measured in seconds.
+timestep = 0.00025;
 % the LC molecules realign at a rate determined by rotational viscosity.
 gamma = 0.08; % rotational viscosity of 80 centiPoise (MBBA at room temp)
 % how large is the sample area?
@@ -47,8 +47,8 @@ nMatrix = randn(gridsize(1),gridsize(2),2);
 nMatrix(:,1,2) = 0;
 nMatrix(:,1,1) = 1;
     
-nMatrix(:,end,2) = 0;
-nMatrix(:,end,1) = -1;
+nMatrix(:,end,2) = .5;
+nMatrix(:,end,1) = .5;
 
 
 
@@ -73,9 +73,7 @@ nMatrixSnapshot(:,:,:,1) = nMatrix;
 snapshot = round(linspace(1,numsteps,frames))';
 snapnum = 2;
 
-[ELx, ELy] = EL_terms_2D(nMatrix,K11,K22,K33,dx,dy);
-
-            
+[ELx, ELy] = EL_terms_2D(nMatrix,K11,K22,K33,dx,dy);   
 
 for ii = 2:numsteps
     % calulate step sizes
@@ -87,8 +85,8 @@ for ii = 2:numsteps
     nMatrix(:,1,2) = 0;
     nMatrix(:,1,1) = 1;
     
-    nMatrix(:,end,2) = 0;
-    nMatrix(:,end,1) = 1;
+    nMatrix(:,end,2) = .5;
+    nMatrix(:,end,1) = .5;
     
     % renormalize
     nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,3)),[1 1 2]);
@@ -96,6 +94,7 @@ for ii = 2:numsteps
     if any(ii==snapshot)
         fprintf('%d%%\n',round(100*ii/numsteps))
         fprintf('%d\n',timestep/gamma*max(max(max(ELx))))
+        avg(snapnum) = mean2(lc_energy_2D_Cartesian(nMatrix, K11, K22, K33, dx,dy)) ;
         nMatrixSnapshot(:,:,:,snapnum) = nMatrix;
         snapnum = snapnum + 1;
     end
@@ -106,7 +105,26 @@ clf
 q2 = quiver(X-nMatrix(:,:,1)./2,Y-nMatrix(:,:,2)./2,nMatrix(:,:,1),nMatrix(:,:,2));
 set(q2,'ShowArrowHead','on')
 
+figure(2)
+plot(avg(3:end))
+xlabel('frame')
+ylabel('average energy')
+
+%% Label and save everything
+
+%let's contruct some strings so we can save things
+home_dir = '/home/gillen/';
+save_dir = '/Documents/Computation/saved_outputs/OF_2D_Linear_twist/';
+name_dir = sprintf('Twist:%d-%d/Date:%s/', atand(nMatrix(1,1,2)/nMatrix(1,1,1)), atand(nMatrix(1,end,2)/nMatrix(1,end,2)),datestr(datetime('now')));
+
+
 %not sure why but matlab tries to save to my home directory instead of the
 %location of the script. specifying the absolute path fixes this, but you'll
 %need to change it if you run this on some other system. 
-save('/home/gillen/Documents/Computation/2D/n2D.mat','nMatrixSnapshot');
+
+%if(~exists('strcat(home_dir,save_dir,name_dir)'))
+    mkdir(strcat(home_dir,save_dir,name_dir));
+%end
+save(strcat(home_dir,save_dir,name_dir,'nMatrix.mat'),'nMatrixSnapshot');
+save(strcat(home_dir,save_dir,name_dir,'aveEnergy'), 'avg');
+save(strcat(home_dir,save_dir,name_dir,'workspace')) %without arguments save saves the whole workspace

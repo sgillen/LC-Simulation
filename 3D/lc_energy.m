@@ -1,4 +1,4 @@
-%% This function should return the 
+%% This function should return the energy for the 3D Cartesian Oseen Frank Rep 
 
 function energy = lc_energy(matrix, K11, K22, K33, deltax, deltay, deltaz)
 

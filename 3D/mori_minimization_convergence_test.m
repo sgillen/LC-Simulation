@@ -1,18 +1,20 @@
 %%The majority of this code was written by David Somers, for now I'm
 %merely making some modifications
 
+clear all 
+
 %% initialize a grid and other parameters
 %how long (in seconds) should each timestep be?
-timestep = 0.0025; 
+timestep = 0.00005; 
 %number of time steps to take
 numsteps = 4000; 
 %number of time frames to save
 frames = 20;  
 
 %how big is the grid (there is a director at every point)
-grid = [12  12  8];
+grid = [6  6  6];
 %how big is the total grid (meters?)
-cellsize = [20e-6, 20e-6, 10e-6];
+cellsize = [20e-6, 20e-6, 20e-6];
 %spacing between directors
 dx = cellsize(1)/grid(1);
 dy = cellsize(2)/grid(2);
@@ -32,7 +34,7 @@ gamma = 0.08;
 tol = .01; 
 
 convergent = false(1);
-scaling_factor = 1;
+scaling_factor = .5;
 
 %% begin with some initial configuration
 
@@ -164,7 +166,11 @@ nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,4)),[1 1 1 3]);
 nMatrix(isnan(nMatrix)) = 0;  
 
 % initialize arrays that we can use to watch the system evolve
-vs = repmat(zeros(size(nMatrix)),1,1,1,1,frames);
+
+
+
+%Commenting this out makes the code very ineffiecient please change ASAP
+%vs = repmat(zeros(size(nMatrix)),1,1,1,1,frames);
 vs(:,:,:,:,1) = nMatrix;
 
 % take a picture whenever we hit one of the following time periods
@@ -214,25 +220,32 @@ for ii = 2:numsteps
         fprintf('%d%%\n',round(100*ii/numsteps))
         avg(snapnum) = mean2(lc_energy(nMatrix, K11, K22, K33, dx, dy, dz));
         fprintf('%d\n', avg(snapnum))
+         maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...
+            max(ELz(:))]);
+        fprintf('maxstep = %d' , maxstep(snapnum))
+    
         
         if(~convergent)
             if(abs(avg(snapnum) - avg(snapnum - 1))) < tol
                 convergent = true(1);
-                timestep = .1;
+                %timestep = .1;
                 test_value = avg(snapnum);
+                fprintf('things look convergent at  a value of : %d, trying larger timestep\n', avg(snapnum))
             else
-                timestep = 1*avg(snapnum);
+                %timestep = scaling_factor*avg(snapnum);
             end
             
         elseif(convergent)
-            fprintf('things are convergent\n')
              if(avg(snapnum) - avg(snapnum - 1) < tol)
                  if(abs(test_value - avg(snapnum)) < tol)
-                    fprintf('hello! we should be breaking now\n')
-                    break % break out of the 
+                    break % break out of the outer while loop  
                  else
-                    test_value = avg(snapnum) 
+                    fprintf('possible convergent value found %d \n', avg(snapnum));
+                    %timestep = .1;
+                    test_value = avg(snapnum); 
                  end
+             else
+                 %timestep = scaling_factor*avg(snapnum);
              end
            
         end
@@ -243,26 +256,32 @@ for ii = 2:numsteps
 end
 
 
-%% TODO : make analys work for n length arrays
+%% TODO : make analysis work for n length arrays
 
 %% analysis
+%vxAll = vxAll(vxAll ~=0)
+%vx = vx(vx ~=0 )
+%vy = vy(vy~=0)
+%vz = vz(vz~=0)
+
+
 vxAll = squeeze(vs(:,:,:,1,:));
 vyAll = squeeze(vs(:,:,:,2,:));
 vzAll = squeeze(vs(:,:,:,3,:));
 
-vx = squeeze(vxAll(:,:,:,end));
-vy = squeeze(vyAll(:,:,:,end));
-vz = squeeze(vzAll(:,:,:,end));
+vxEnd = squeeze(vxAll(:,:,:,end));
+vyEnd = squeeze(vyAll(:,:,:,end));
+vzEnd = squeeze(vzAll(:,:,:,end));
 
 figure(1)
 clf
 slice = 1;
-q2 = quiver(X(:,:,slice)-vx(:,:,slice)./2,Y(:,:,slice)-vy(:,:,slice)./2,vx(:,:,slice),vy(:,:,slice));
+q2 = quiver(X(:,:,slice)-vxEnd(:,:,slice)./2,Y(:,:,slice)-vyEnd(:,:,slice)./2,vxEnd(:,:,slice),vyEnd(:,:,slice));
 set(q2,'ShowArrowHead','off')
 
 figure(2)
 clf
-q3 = quiver3(X-vx./2,Y-vy./2,Z-vz./2,vx,vy,vz);
+q3 = quiver3(X-vxEnd./2,Y-vyEnd./2,Z-vzEnd./2,vxEnd,vyEnd,vzEnd);
 set(q3,'ShowArrowHead','off')
 
 figure(3)

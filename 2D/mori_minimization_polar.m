@@ -1,4 +1,5 @@
 %% initalize variables we'll need
+clear all
 % how many steps to take?
 numsteps = 40000;
 % save this number of orientations to capture dynamics
@@ -36,7 +37,7 @@ K33 = 12e-12;
 %% begin with some initial configuration
 
 % %  randomly oriented
-nMatrix = randn(gridsize(1),gridsize(2),2);
+nMatrix = randn(gridsize(1),gridsize(2));
 
 % % fixed orientation
 % nMatrix = ones(gridsize(1),gridsize(2),2);
@@ -44,51 +45,60 @@ nMatrix = randn(gridsize(1),gridsize(2),2);
 
 %% set some boundary conditions. these should be enforced at each step.
 
-nMatrix = enforce_2D_BCs(nMatrix);
+nMatrix = enforce_2D_polar_BCs(nMatrix);
 
 % normalize. this should also be done at each step.
-nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,3)),[1 1 2]);
+% I'm not sure why but the way I'm doing things doesn't like angles outside
+% the range 0 < phi < 2pi ,this could be a sign that something else is
+% wrong though. 
+nMatrix = mod(nMatrix,2*pi);
+
 
 % initialize an array to store snapshots of the nMatrix in time.
-nMatrixSnapshot = repmat(zeros(size(nMatrix)),1,1,1,frames);
+nMnMatrixSnapshot = repmat(zeros(size(nMatrix)),1,1,frames);
 
 % set the first snapshot to the inital condition
-nMatrixSnapshot(:,:,:,1) = nMatrix;
+nMatrixSnapshot(:,:,1) = nMatrix;
 
 % take a picture whenever we hit one of the following time periods
 snapshot = round(linspace(1,numsteps,frames))';
 snapnum = 2;
 
-[ELx, ELy] = EL_terms_2D(nMatrix,K11,K22,K33,dx,dy);   
+[ELp] = EL_terms_2D_polar(nMatrix,K11,K22,K33,dx,dy);
+
+avgEnergy = zeros(1,frames);
+avgEnergy(1) = mean2(lc_energy_2D_polar(nMatrix,K11,K22,K33,dx,dy));
 
 for ii = 2:numsteps
     % calulate step sizes
-    [ELx, ELy] = EL_terms_2D(nMatrix,K11,K22,K33,dx,dy);
-    nMatrix(:,:,1) = nMatrix(:,:,1) - timestep./gamma.*ELx;
-    nMatrix(:,:,2) = nMatrix(:,:,2) - timestep./gamma.*ELy;
+    [ELp] = EL_terms_2D_polar(nMatrix,K11,K22,K33,dx,dy);
+    nMatrix = nMatrix - timestep./gamma.*ELp;
     
     %enforce BCs
-    nMatrix = enforce_2D_BCs(nMatrix);
+    nMatrix = enforce_2D_polar_BCs(nMatrix);
     
-    % renormalize
-    nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,3)),[1 1 2]);
+    % renormalize 
+    nMatrix = mod(nMatrix,2*pi);
+    %nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,3)),[1 1 2]);
     
     if any(ii==snapshot)
         fprintf('%d%%\n',round(100*ii/numsteps))
-        fprintf('%d\n',timestep/gamma*max(max(max(ELx))))
-        avg(snapnum) = mean2(lc_energy_2D_Cartesian(nMatrix, K11, K22, K33, dx,dy)) ;
-        nMatrixSnapshot(:,:,:,snapnum) = nMatrix;
+        fprintf('%d\n',timestep/gamma*max(max(max(ELp))))
+        %avg(snapnum) = mean2(lc_energy_2D_Cartesian(nMatrix, K11, K22, K33, dx,dy)) ;
+        avgEnergy(snapnum) = mean2(lc_energy_2D_polar(nMatrix,K11,K22,K33,dx,dy));
+        fprintf('energy: %d\n', avgEnergy(snapnum)) 
+        nMatrixSnapshot(:,:,snapnum) = nMatrix;
         snapnum = snapnum + 1;
     end
 end
 
 figure(1)
 clf
-q2 = quiver(X-nMatrix(:,:,1)./2,Y-nMatrix(:,:,2)./2,nMatrix(:,:,1),nMatrix(:,:,2));
+q2 = quiver(sin(nMatrix), cos(nMatrix)) ;
 set(q2,'ShowArrowHead','on')
 
 figure(2)
-plot(avg(3:end))
+plot(avgEnergy(2:end))
 xlabel('frame')
 ylabel('average energy')
 
@@ -96,8 +106,8 @@ ylabel('average energy')
 
 %let's contruct some strings so we can save things
 home_dir = '/home/gillen/';
-save_dir = '/Documents/Computation/saved_outputs/OF_2D_Linear_twist/';
-name_dir = sprintf('Twist:%d-%d/Date:%s/', atand(nMatrix(1,1,2)/nMatrix(1,1,1)), atand(nMatrix(1,end,2)/nMatrix(1,end,2)),datestr(datetime('now')));
+save_dir = '/Documents/Computation/saved_outputs/OF_2D_Linear_twist_polar/';
+name_dir = sprintf('Twist:%d-%d/Time_step:%d__frames:%d__Date:%s/', nMatrix(1,1)*180/pi, nMatrix(1,end)*180/pi, timestep, frames, datestr(datetime('now')));
 
 
 %not sure why but matlab tries to save to my home directory instead of the
@@ -108,5 +118,5 @@ name_dir = sprintf('Twist:%d-%d/Date:%s/', atand(nMatrix(1,1,2)/nMatrix(1,1,1)),
     mkdir(strcat(home_dir,save_dir,name_dir));
 %end
 save(strcat(home_dir,save_dir,name_dir,'nMatrix.mat'),'nMatrixSnapshot');
-save(strcat(home_dir,save_dir,name_dir,'aveEnergy'), 'avg');
-save(strcat(home_dir,save_dir,name_dir,'workspace')) %without arguments save saves the whole workspace
+save(strcat(home_dir,save_dir,name_dir,'aveEnergy'), 'avgEnergy');
+save(strcat(home_dir,save_dir,name_dir,'workspace')) %without arguments save saves the whole workspace, This shouldn't bee too h

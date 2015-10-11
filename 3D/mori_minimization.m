@@ -3,16 +3,16 @@
 
 %% initialize a grid and other parameters
 %how long (in seconds) should each timestep be?
-timestep = 0.0025; 
+timestep = 0.0001; 
 %number of time steps to take
 numsteps = 4000; 
 %number of time frames to save
 frames = 20;  
 
 %how big is the grid (there is a director at every point)
-grid = [12  12  8];
+grid = [5 5 5 ];
 %how big is the total grid (meters?)
-cellsize = [20e-6, 20e-6, 10e-6];
+cellsize = [20e-6, 20e-6, 20e-6];
 %spacing between directors
 dx = cellsize(1)/grid(1);
 dy = cellsize(2)/grid(2);
@@ -205,12 +205,11 @@ for ii = 2:numsteps
     nMatrix(isnan(nMatrix)) = 0;  
     
     %save at the certain points we care about. 
-    if any(ii==snapshot)
-        fprintf('%d%%\n',round(100*ii/numsteps))
-        
-        %avg(snapnum) = mean2(lc_energy(nMatrix, K11, K22, K33, dx, dy, dz));
+    if any(ii==snapshot)      
+       avg(snapnum) = mean2(lc_energy(nMatrix, K11, K22, K33, dx, dy, dz));
         maxstep(snapnum)=timestep/gamma*max([max(ELx(:)),max(ELy(:)),...
             max(ELz(:))]);
+        fprintf( 'avg = %d\nmaxstep= %d\n', avg(snapnum), maxstep(snapnum))
     
         vs(:,:,:,:,snapnum) = nMatrix;
         snapnum = snapnum + 1;

@@ -1,17 +1,19 @@
+
+%function [phi] = mori_minimization_polar(Ws)
 %% initalize variables we'll need
-clear all
+%clear all
 % how many steps to take?
-numsteps = 40000;
+numsteps = 10000;
 % save this number of orientations to capture dynamics
-frames = 50;
+frames = 100;
 % how large of mesh
 gridsize = [10 10];
-% how long should each step represent for dynamics? Measured in seconds.
-timestep = 0.00025;
+% how long should each step represent for dynamics? Measured in seconds?
+timestep = 0.000001;
 % the LC molecules realign at a rate determined by rotational viscosity.
 gamma = 0.08; % rotational viscosity of 80 centiPoise (MBBA at room temp)
 % how large is the sample area?
-cellsize = [20e-6, 20e-6];
+cellsize = [2e-6, 2e-6];
 % calculate size of each mesh point
 dx = cellsize(1)/(gridsize(1)-1); % minus one because matlab starts indexing at 1
 dy = cellsize(2)/(gridsize(2)-1);
@@ -23,16 +25,6 @@ K33 = 12e-12;
 %Always use ndgrid and never meshgrid meshgrid will flip the X and Y coordinates.
 [X,Y] = ndgrid(1:gridsize(1),1:gridsize(2));
 
-% Create a matrix to represent the director in our grid. For each grid
-% point, there is an nx and an ny value. Although the n-vector is
-% normalized (which means there is only one free variable) and we only need
-% the angular orientation of the n-vector, you can get numerical
-% instabilities from the trig functions. It's easier (but a little more
-% memory-intensive) to just calculate nx and ny separately and normalize at
-% each step. For 2D, it may well be best to just calculate the angle. But
-% the method we use here generalizes to 3D more easily as well.
-
-
 
 %% begin with some initial configuration
 
@@ -41,18 +33,20 @@ nMatrix = randn(gridsize(1),gridsize(2));
 
 % % fixed orientation
 % nMatrix = ones(gridsize(1),gridsize(2),2);
-% nMatrix(:,:,2) = 1;
+nMatrix(:,:) = 0;
 
 %% set some boundary conditions. these should be enforced at each step.
 
-nMatrix = enforce_2d_polar_bcs(nMatrix);
+%create a matrix representing the weak BC's enforced by the modifed L terms
+wbcMatrix = create_weak_bcs(size(nMatrix));
 
-% normalize. this should also be done at each step.
-% I'm not sure why but the way I'm doing things doesn't like angles outside
-% the range 0 < phi < 2pi ,this could be a sign that something else is
-% wrong though. 
-nMatrix = mod(nMatrix,2*pi);
+%enforce the strong boundaries
+[nMatrix] = enforce_2d_polar_sbcs(nMatrix);
 
+% Sort of like normalizing, but smarter about it, I'm not entirley sure
+% this is actually working.. 
+
+nMatrix = unwrap(nMatrix,pi,1);
 
 % initialize an array to store snapshots of the nMatrix in time.
 nMnMatrixSnapshot = repmat(zeros(size(nMatrix)),1,1,frames);
@@ -64,28 +58,28 @@ nMatrixSnapshot(:,:,1) = nMatrix;
 snapshot = round(linspace(1,numsteps,frames))';
 snapnum = 2;
 
-[ELp] = el_terms_2d_polar(nMatrix,K11,K22,K33,dx,dy);
-
 avgEnergy = zeros(1,frames);
-avgEnergy(1) = mean2(lc_energy_2d_polar(nMatrix,K11,K22,K33,dx,dy));
+avgEnergy(1) = mean2(lc_energy_2d_polar(nMatrix,K11,K22,K33,dx,dy,wbcMatrix));
+
 
 for ii = 2:numsteps
-    % calulate step sizes
-    [ELp] = el_terms_2d_polar(nMatrix,K11,K22,K33,dx,dy);
-    nMatrix = nMatrix - timestep./gamma.*ELp;
+    %calulate step sizes
+    [ELp] = el_terms_2d_polar(nMatrix,K11,K22,K33,dx,dy,wbcMatrix);
+    nMatrix = nMatrix - timestep./gamma.*(ELp);
     
     %enforce BCs
-    nMatrix = enforce_2d_polar_bcs(nMatrix);
+    nMatrix = enforce_2d_polar_sbcs(nMatrix);
     
     % renormalize 
-    nMatrix = mod(nMatrix,2*pi);
-    %nMatrix = nMatrix./repmat(sqrt(sum(nMatrix.^2,3)),[1 1 2]);
+    nMatrix = unwrap(nMatrix,pi);
+    %nMatrix = mod(nMatrix,2*pi);
+    
     
     if any(ii==snapshot)
         fprintf('%d%%\n',round(100*ii/numsteps))
         fprintf('%d\n',timestep/gamma*max(max(max(ELp))))
         %avg(snapnum) = mean2(lc_energy_2D_Cartesian(nMatrix, K11, K22, K33, dx,dy)) ;
-        avgEnergy(snapnum) = mean2(lc_energy_2d_polar(nMatrix,K11,K22,K33,dx,dy));
+        avgEnergy(snapnum) = mean2(lc_energy_2d_polar(nMatrix,K11,K22,K33,dx,dy,wbcMatrix));
         fprintf('energy: %d\n', avgEnergy(snapnum)) 
         nMatrixSnapshot(:,:,snapnum) = nMatrix;
         snapnum = snapnum + 1;
@@ -94,7 +88,7 @@ end
 
 figure(1)
 clf
-q2 = quiver(sin(nMatrix), cos(nMatrix)) ;
+q2 = quiver(cos(nMatrix), sin(nMatrix)) ;
 set(q2,'ShowArrowHead','on')
 
 figure(2)
@@ -106,9 +100,15 @@ ylabel('average energy')
 
 %let's contruct some strings so we can save things
 home_dir = '/home/gillen/';
-save_dir = '/Documents/Computation/saved_outputs/OF_2D_Linear_twist_polar/';
-name_dir = sprintf('Twist:%d-%d/Time_step:%d__frames:%d__Date:%s/', nMatrix(1,1)*180/pi, nMatrix(1,end)*180/pi, timestep, frames, datestr(datetime('now')));
+save_dir = '/Documents/Computation/saved_outputs/2D_unwrap_test/';
+%name_dir =  sprintf('Time_step:%d__frames__WS:%d', wbcMatrix(1,end),timestep,frames);
+%name_dir = sprintf('Time_Step:%d__Date:%s/' ,timestep, datestr(datetime('now')));
+name_dir  = sprintf('0start/');
 
+
+eng_fig_name = 'energy.jpg';
+director_fig_name = 'director.jpg';
+final_phi = 'phi';
 
 %not sure why but matlab tries to save to my home directory instead of the
 %location of the script. specifying the absolute path fixes this, but you'll
@@ -118,5 +118,13 @@ name_dir = sprintf('Twist:%d-%d/Time_step:%d__frames:%d__Date:%s/', nMatrix(1,1)
     mkdir(strcat(home_dir,save_dir,name_dir));
 %end
 save(strcat(home_dir,save_dir,name_dir,'nMatrix.mat'),'nMatrixSnapshot');
-save(strcat(home_dir,save_dir,name_dir,'aveEnergy'), 'avgEnergy');
-save(strcat(home_dir,save_dir,name_dir,'workspace')) %without arguments save saves the whole workspace, This shouldn't bee too h
+save('n2d.mat' , 'nMatrixSnapshot');
+save(strcat(home_dir,save_dir,name_dir,'avgEnergy'), 'avgEnergy');
+save(strcat(home_dir,save_dir,name_dir,'workspace'))%without arguments save saves the whole workspace, This shouldn't bee too h
+saveas(figure(2), strcat(home_dir,save_dir,name_dir,eng_fig_name));
+saveas(figure(1), strcat(home_dir,save_dir,name_dir,director_fig_name));
+
+phi = nMatrix(1,end);
+save(strcat(home_dir,save_dir,name_dir,'final_phi'), 'phi');
+
+%end

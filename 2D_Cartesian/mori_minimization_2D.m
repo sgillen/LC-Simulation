@@ -1,10 +1,10 @@
 %% initalize variables we'll need
 % how many steps to take?
-numsteps = 40000;
+numsteps = 10000;
 % save this number of orientations to capture dynamics
 frames = 50;
 % how large of mesh?
-gridsize = [10 10];
+gridsize = [20 20];
 % how long should each step represent for dynamics? Measured in seconds.
 timestep = 0.00025;
 % the LC molecules realign at a rate determined by rotational viscosity.
@@ -88,7 +88,7 @@ q2 = quiver(X-nMatrix(:,:,1)./2,Y-nMatrix(:,:,2)./2,nMatrix(:,:,1),nMatrix(:,:,2
 set(q2,'ShowArrowHead','on')
 
 figure(2)
-plot(avg(3:end))
+plot(avg(2:end))
 xlabel('frame')
 ylabel('average energy')
 
@@ -96,8 +96,11 @@ ylabel('average energy')
 
 %let's contruct some strings so we can save things
 home_dir = '/home/gillen/';
-save_dir = '/Documents/Computation/saved_outputs/OF_2D_Linear_twist/';
+save_dir = '/Documents/Computation/saved_outputs/2D_Cartesian_allbcs/';
 name_dir = sprintf('Twist:%d-%d/Date:%s/', atand(nMatrix(1,1,2)/nMatrix(1,1,1)), atand(nMatrix(1,end,2)/nMatrix(1,end,2)),datestr(datetime('now')));
+
+eng_fig_name = 'energy.jpg';
+director_fig_name = 'director.jpg';
 
 
 %not sure why but matlab tries to save to my home directory instead of the
@@ -110,3 +113,5 @@ name_dir = sprintf('Twist:%d-%d/Date:%s/', atand(nMatrix(1,1,2)/nMatrix(1,1,1)),
 save(strcat(home_dir,save_dir,name_dir,'nMatrix.mat'),'nMatrixSnapshot');
 save(strcat(home_dir,save_dir,name_dir,'aveEnergy'), 'avg');
 save(strcat(home_dir,save_dir,name_dir,'workspace')) %without arguments save saves the whole workspace
+saveas(figure(2), strcat(home_dir,save_dir,name_dir,eng_fig_name));
+saveas(figure(1), strcat(home_dir,save_dir,name_dir,director_fig_name));

@@ -36,8 +36,7 @@ gamma = 0.08;
 
  nMatrix = randn(grid(1),grid(2),grid(3),3);
  %nMatrix(:,:,:,3) = 0;
-
-
+ 
 %% Create the boundary shape 
 %{
 %should create a hemisphere shaped logical array, appears to work
@@ -126,15 +125,10 @@ end
 %}
 %% set some boundary conditions. these should be enforced at each step.
 
-%kind of like a very strong torque
-nMatrix(:,:,1,1) = 0;
-nMatrix(:,:,1,2) = 1;
-nMatrix(:,:,1,3) = 0;
+nMatrix = enforce_3d_sbcs(nMatrix);
 
-nMatrix(:,:,end,1) = .5;
-nMatrix(:,:,end,2) = .5;
-nMatrix(:,:,end,3) = 0;
-
+ %Grab the weak bc matrix
+ wbcMatrix = create_3d_wbcs(size(nMatrix));
 
 %hemisphere is zero outside the boundary so this effectively sets
 %everything outside the droplet to zero 
@@ -173,7 +167,7 @@ snapnum = 2;
 for ii = 2:numsteps
     % calulate step sizes
     %grab the EL terms
-    [ELx, ELy, ELz] = EL_terms(nMatrix,K11,K22,K33,dx,dy,dz);
+    [ELx, ELy, ELz] = EL_terms(nMatrix,K11,K22,K33,dx,dy,dz,wbcMatrix);
     nMatrix(:,:,:,1) = nMatrix(:,:,:,1) - timestep/gamma*ELx;
     nMatrix(:,:,:,2) = nMatrix(:,:,:,2) - timestep/gamma*ELy;
     nMatrix(:,:,:,3) = nMatrix(:,:,:,3) - timestep/gamma*ELz;

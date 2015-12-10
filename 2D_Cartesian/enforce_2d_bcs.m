@@ -6,11 +6,17 @@ function oMatrix = enforce_2D_BCs(iMatrix)
 %values in matlab ? 
 oMatrix = iMatrix ;
 
-oMatrix(:,1,2) = 0;
-oMatrix(:,1,1) = 1;
+oMatrix(:,1,2) = 1;
+oMatrix(:,1,1) = .5;
     
-oMatrix(:,end,2) = .5;
-oMatrix(:,end,1) = .5;
+oMatrix(:,end,2) = -1;
+oMatrix(:,end,1) = 0;
+
+oMatrix(1,:,1) = 0;
+oMatrix(1,:,2) = 1;
+
+oMatrix(end,:,1)= 0;
+oMatrix(end,:,2) = -1;
 
 % nMatrix(:,1,2) = 0;
 % nMatrix(:,end,2) = 0;

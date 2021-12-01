@@ -2,4 +2,4 @@ This is a collection of Matlab scripts and Mathematica notebooks I accumulated w
 
 This was research code, one time use, and is an unapologetic mess. I don't suggest you use it, but it might be useful as a reference.
 
-Shout out to David Somers, who wrote a fair amount of this code, and guided me the math throughout. 
+Shout out to David Somers, a former grad student in Munday Lab that guided me throughout the project. 
